@@ -39,3 +39,10 @@ button.danger { color: var(--danger); border-color: #f3b4b4; }
 .badge.Média { background: #fef3c7; color: #92400e; }
 .badge.Baixa { background: #dcfce7; color: #166534; }
 .empty { color: var(--muted); text-align: center; padding: 16px 0 4px; }
+.btn-link { display: inline-block; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--border); background: #fff; color: var(--text); text-decoration: none; }
+.quote { background: #eef2ff; border: 1px solid #d5ddff; border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; font-style: italic; }
+.quote p { margin: 0; }
+.quote-author { color: var(--muted); font-style: normal; }
+.detail dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 12px 0 16px; }
+.detail dt { font-weight: 600; }
+.detail dd { margin: 0; }

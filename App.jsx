@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import { Link, Route, Routes } from 'react-router-dom'
 import TaskForm from './TaskForm.jsx'
 import TaskFilters from './TaskFilters.jsx'
 import TaskSummary from './TaskSummary.jsx'
 import TaskList from './TaskList.jsx'
+import TaskDetail from './TaskDetail.jsx'
+import QuoteBanner from './QuoteBanner.jsx'
 import { loadTasks, saveTasks } from './taskStorage.js'
 import { normalizeTitle } from './validation.js'
 
@@ -40,9 +43,10 @@ export default function App() {
 
   function handleDelete(id) {
     const task = tasks.find((t) => t.id === id)
-    if (!task || !window.confirm(`Excluir a tarefa "${task.title}"?`)) return
+    if (!task || !window.confirm(`Excluir a tarefa "${task.title}"?`)) return false
     commit(tasks.filter((t) => t.id !== id))
     if (editingId === id) setEditingId(null)
+    return true
   }
 
   // Valores derivados da coleção principal
@@ -68,34 +72,64 @@ export default function App() {
         </div>
       )}
 
-      <TaskSummary total={tasks.length} pending={tasks.length - done} done={done} />
+      <QuoteBanner />
 
-      <section aria-labelledby="form-title" className="card">
-        <h2 id="form-title">{editingTask ? 'Editar tarefa' : 'Nova tarefa'}</h2>
-        <TaskForm
-          key={editingId ?? 'new'}
-          initialValues={editingTask}
-          onSubmit={handleSubmit}
-          onCancel={editingTask ? () => setEditingId(null) : null}
-        />
-      </section>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+                    <TaskSummary total={tasks.length} pending={tasks.length - done} done={done} />
 
-      <section aria-labelledby="list-title" className="card">
-        <h2 id="list-title">Suas tarefas</h2>
-        <TaskFilters
-          query={query}
-          status={status}
-          onQueryChange={setQuery}
-          onStatusChange={setStatus}
+                    <section aria-labelledby="form-title" className="card">
+                      <h2 id="form-title">{editingTask ? 'Editar tarefa' : 'Nova tarefa'}</h2>
+                      <TaskForm
+                        key={editingId ?? 'new'}
+                        initialValues={editingTask}
+                        onSubmit={handleSubmit}
+                        onCancel={editingTask ? () => setEditingId(null) : null}
+                      />
+                    </section>
+
+                    <section aria-labelledby="list-title" className="card">
+                      <h2 id="list-title">Suas tarefas</h2>
+                      <TaskFilters
+                        query={query}
+                        status={status}
+                        onQueryChange={setQuery}
+                        onStatusChange={setStatus}
+                      />
+                      <TaskList
+                        tasks={visible}
+                        hasAny={tasks.length > 0}
+                        onToggle={handleToggle}
+                        onEdit={setEditingId}
+                        onDelete={handleDelete}
+                      />
+                    </section>
+            </>
+          }
         />
-        <TaskList
-          tasks={visible}
-          hasAny={tasks.length > 0}
-          onToggle={handleToggle}
-          onEdit={setEditingId}
-          onDelete={handleDelete}
+        <Route
+          path="/tarefa/:id"
+          element={
+            <TaskDetail
+              tasks={tasks}
+              onToggle={handleToggle}
+              onEdit={setEditingId}
+              onDelete={handleDelete}
+            />
+          }
         />
-      </section>
+        <Route
+          path="*"
+          element={
+            <p className="card">
+              Página não encontrada. <Link to="/">Voltar ao início</Link>
+            </p>
+          }
+        />
+      </Routes>
     </div>
   )
 }

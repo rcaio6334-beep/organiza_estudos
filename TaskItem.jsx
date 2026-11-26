@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
   const checkId = `check-${task.id}`
   return (
@@ -16,6 +18,9 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
         </span>
       </label>
       <div className="task-actions">
+        <Link to={`/tarefa/${task.id}`} className="btn-link" aria-label={`Ver detalhes de ${task.title}`}>
+          Detalhes
+        </Link>
         <button type="button" onClick={() => onEdit(task.id)} aria-label={`Editar ${task.title}`}>
           Editar
         </button>

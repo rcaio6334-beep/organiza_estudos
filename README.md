@@ -8,6 +8,8 @@ Trabalho do Grupo 1 — Desenvolvimento Web (ADS).
 - Editar, marcar como concluída e excluir (com confirmação)
 - Filtrar por texto e por situação
 - Painel com total, pendentes e concluídas
+- Página de detalhe de cada tarefa (rota `#/tarefa/:id`, com React Router)
+- Frase do dia consumida de uma API pública (dummyjson.com), com tratamento de carregamento, erro e nova tentativa
 - Dados salvos no `localStorage` do navegador
 
 ## Como rodar
@@ -24,7 +26,7 @@ npm run preview  # testa o build
 ```
 src/
   App.jsx                 estado compartilhado (fonte de verdade)
-  components/             TaskForm, TaskList, TaskItem, TaskFilters, TaskSummary
+  components/             TaskForm, TaskList, TaskItem, TaskFilters, TaskSummary, TaskDetail, QuoteBanner
   services/taskStorage.js leitura e gravação (trocável por uma API)
   utils/validation.js     validação e normalização do título
 ```
