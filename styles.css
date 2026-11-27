@@ -46,3 +46,7 @@ button.danger { color: var(--danger); border-color: #f3b4b4; }
 .detail dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 12px 0 16px; }
 .detail dt { font-weight: 600; }
 .detail dd { margin: 0; }
+.app-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.user-box { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.login { max-width: 420px; margin: 24px auto; }
+.hint { background: #eef2ff; border: 1px solid #d5ddff; border-radius: 8px; padding: 8px 12px; font-size: .85rem; margin: 14px 0 0; }

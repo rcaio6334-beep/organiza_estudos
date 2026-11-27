@@ -1,11 +1,14 @@
 import { useState } from 'react'
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link, Navigate, Route, Routes } from 'react-router-dom'
 import TaskForm from './TaskForm.jsx'
 import TaskFilters from './TaskFilters.jsx'
 import TaskSummary from './TaskSummary.jsx'
 import TaskList from './TaskList.jsx'
 import TaskDetail from './TaskDetail.jsx'
 import QuoteBanner from './QuoteBanner.jsx'
+import AppHeader from './AppHeader.jsx'
+import Login from './Login.jsx'
+import { getSession, logout } from './authService.js'
 import { loadTasks, saveTasks } from './taskStorage.js'
 import { normalizeTitle } from './validation.js'
 
@@ -13,7 +16,13 @@ function newId() {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`
 }
 
+// Protege as telas: sem login, redireciona para /login
+function RequireAuth({ user, children }) {
+  return user ? children : <Navigate to="/login" replace />
+}
+
 export default function App() {
+  const [user, setUser] = useState(getSession)
   const [initial] = useState(loadTasks)
   const [tasks, setTasks] = useState(initial.tasks)
   const [storageError, setStorageError] = useState(initial.error)
@@ -49,6 +58,12 @@ export default function App() {
     return true
   }
 
+  function handleLogout() {
+    logout()
+    setUser(null)
+    setEditingId(null)
+  }
+
   // Valores derivados da coleção principal
   const visible = tasks.filter((t) => {
     const matchText = `${t.title} ${t.subject}`.toLowerCase().includes(query.trim().toLowerCase())
@@ -61,10 +76,7 @@ export default function App() {
 
   return (
     <div className="container">
-      <header>
-        <h1>Organiza Estudos</h1>
-        <p>Gerenciador acadêmico de tarefas feito com React.</p>
-      </header>
+      <AppHeader user={user} onLogout={handleLogout} />
 
       {storageError && (
         <div className="alert" role="alert">
@@ -72,12 +84,17 @@ export default function App() {
         </div>
       )}
 
-      <QuoteBanner />
+      {user && <QuoteBanner />}
 
       <Routes>
         <Route
+          path="/login"
+          element={user ? <Navigate to="/" replace /> : <Login onLogin={setUser} />}
+        />
+        <Route
           path="/"
           element={
+            <RequireAuth user={user}>
             <>
                     <TaskSummary total={tasks.length} pending={tasks.length - done} done={done} />
 
@@ -108,17 +125,20 @@ export default function App() {
                       />
                     </section>
             </>
+            </RequireAuth>
           }
         />
         <Route
           path="/tarefa/:id"
           element={
-            <TaskDetail
-              tasks={tasks}
-              onToggle={handleToggle}
-              onEdit={setEditingId}
-              onDelete={handleDelete}
-            />
+            <RequireAuth user={user}>
+              <TaskDetail
+                tasks={tasks}
+                onToggle={handleToggle}
+                onEdit={setEditingId}
+                onDelete={handleDelete}
+              />
+            </RequireAuth>
           }
         />
         <Route

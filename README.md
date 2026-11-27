@@ -4,6 +4,7 @@ Gerenciador acadêmico de tarefas feito com **React + Vite**.
 Trabalho do Grupo 1 — Desenvolvimento Web (ADS).
 
 ## Funcionalidades
+- Tela de login (conta de demonstração: usuário `aluno`, senha `react123`) e cabeçalho com "Sair" em todas as telas
 - Cadastrar tarefa (título obrigatório, disciplina e prioridade)
 - Editar, marcar como concluída e excluir (com confirmação)
 - Filtrar por texto e por situação
@@ -26,7 +27,7 @@ npm run preview  # testa o build
 ```
 src/
   App.jsx                 estado compartilhado (fonte de verdade)
-  components/             TaskForm, TaskList, TaskItem, TaskFilters, TaskSummary, TaskDetail, QuoteBanner
+  components/             TaskForm, TaskList, TaskItem, TaskFilters, TaskSummary, TaskDetail, QuoteBanner, Login, AppHeader
   services/taskStorage.js leitura e gravação (trocável por uma API)
   utils/validation.js     validação e normalização do título
 ```
@@ -37,6 +38,8 @@ src/
 3. A cada push, o workflow em `.github/workflows/deploy.yml` publica o site.
 
 ## Limitações
+O login é apenas de demonstração, feito no front-end: as credenciais ficam no código e não oferecem segurança real. Em um sistema de verdade, a validação e a autorização precisam ser feitas por um servidor.
+
 O `localStorage` não sincroniza entre dispositivos nem tem controle de acesso.
 
 ## Equipe
